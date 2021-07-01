@@ -5,6 +5,7 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.util.Assert;
 
+import br.com.zup.ecommerce.compartilhado.ExistsId;
 import br.com.zup.ecommerce.compartilhado.UniqueValue;
 
 public class CategoriaRequest {
@@ -14,6 +15,7 @@ public class CategoriaRequest {
 	private String nome;
 	
 	@Positive
+	@ExistsId(domainClass = Categoria.class, fieldName = "id")
 	private Long idCategoriaMae;
 
 	
