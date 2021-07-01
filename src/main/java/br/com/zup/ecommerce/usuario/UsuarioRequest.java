@@ -5,10 +5,15 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
+import br.com.zup.ecommerce.compartilhado.UniqueValue;
+
+
+
 public class UsuarioRequest {
 	
 	@NotBlank
 	@Email
+	@UniqueValue(domainClass=Usuario.class, fieldName="email", message="Esta email ja esta cadastrado")
 	private String email;
 	
 	@NotBlank
