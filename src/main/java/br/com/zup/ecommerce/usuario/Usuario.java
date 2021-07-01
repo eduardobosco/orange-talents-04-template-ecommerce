@@ -1,24 +1,32 @@
 package br.com.zup.ecommerce.usuario;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +44,9 @@ public class Usuario {
 	@NotNull
 	@Length(min = 6)
 	private String password;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+    private List<Perfil> perfis = new ArrayList<>();
 
 	public Usuario() {
 	}
@@ -62,9 +73,6 @@ public class Usuario {
 		return email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
 
 	@Override
 	public int hashCode() {
@@ -94,6 +102,41 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario [id =" + id + ", email=" + email + ", password=" + password + "]";
+	}
+
+	@Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return perfis;
+    }
+	
+	@Override
+    public String getPassword() {
+        return password;
+    }
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
 	}
 
 }
